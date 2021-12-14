@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import torch
 
-from models.caffenet import caffenet, AlexNetCaffe
+from models.caffenet import AlexNetCaffe, caffenet
 
 
 class TestCaffenet(TestCase):
@@ -19,4 +19,3 @@ class TestCaffenet(TestCase):
         X = torch.zeros(batch_size, 3, 227, 227)
         y = net(X)
         self.assertEquals(list(y.shape), [batch_size, n_classes])
-

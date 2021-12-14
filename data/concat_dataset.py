@@ -32,7 +32,7 @@ class ConcatDataset(Dataset):
 
     def __init__(self, datasets):
         super(ConcatDataset, self).__init__()
-        assert len(datasets) > 0, 'datasets should not be an empty iterable'
+        assert len(datasets) > 0, "datasets should not be an empty iterable"
         self.datasets = list(datasets)
         self.cumulative_sizes = self.cumsum(self.datasets)
 
@@ -49,6 +49,9 @@ class ConcatDataset(Dataset):
 
     @property
     def cummulative_sizes(self):
-        warnings.warn("cummulative_sizes attribute is renamed to "
-                      "cumulative_sizes", DeprecationWarning, stacklevel=2)
+        warnings.warn(
+            "cummulative_sizes attribute is renamed to " "cumulative_sizes",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self.cumulative_sizes

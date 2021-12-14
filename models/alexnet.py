@@ -1,10 +1,10 @@
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 
-__all__ = ['AlexNet', 'alexnet']
+__all__ = ["AlexNet", "alexnet"]
 
 model_urls = {
-    'alexnet': 'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth',
+    "alexnet": "https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth",
 }
 
 
@@ -60,9 +60,9 @@ def alexnet(classes, pretrained=False):
     """
     model = AlexNet(classes, True)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['alexnet']))
+        model.load_state_dict(model_zoo.load_url(model_urls["alexnet"]))
 
     model.classifier[-1] = nn.Linear(4096, classes)
-    nn.init.xavier_uniform_(model.classifier[-1].weight, .1)
-    nn.init.constant_(model.classifier[-1].bias, 0.)
+    nn.init.xavier_uniform_(model.classifier[-1].weight, 0.1)
+    nn.init.constant_(model.classifier[-1].bias, 0.0)
     return model

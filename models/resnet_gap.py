@@ -1,14 +1,13 @@
 from torch import nn
 from torch.utils import model_zoo
-from torchvision.models.resnet import BasicBlock, model_urls, Bottleneck
-import torch
+from torchvision.models.resnet import BasicBlock, model_urls
+
 
 class ResNetGAP(nn.Module):
     def __init__(self, block, layers, jigsaw_classes=1000, classes=100, domains=3):
         self.inplanes = 64
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
-                               bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -18,12 +17,12 @@ class ResNetGAP(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AvgPool2d(7, stride=1)
         self.jigsaw_classifier = nn.Linear(512 * block.expansion, jigsaw_classes)
-        self.class_classifier = nn.Conv2d(512, classes, kernel_size=1,padding=0)
-        #self.domain_classifier = nn.Linear(512 * block.expansion, domains)
+        self.class_classifier = nn.Conv2d(512, classes, kernel_size=1, padding=0)
+        # self.domain_classifier = nn.Linear(512 * block.expansion, domains)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                nn.init.kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
@@ -32,8 +31,13 @@ class ResNetGAP(nn.Module):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
-                nn.Conv2d(self.inplanes, planes * block.expansion,
-                          kernel_size=1, stride=stride, bias=False),
+                nn.Conv2d(
+                    self.inplanes,
+                    planes * block.expansion,
+                    kernel_size=1,
+                    stride=stride,
+                    bias=False,
+                ),
                 nn.BatchNorm2d(planes * block.expansion),
             )
 
@@ -60,7 +64,7 @@ class ResNetGAP(nn.Module):
         x = self.layer4(x)
 
         cl = self.class_classifier(x)
-        
+
         x = self.avgpool(x)
         cl = self.avgpool(cl)
         x = x.view(x.size(0), -1)
@@ -74,5 +78,5 @@ def resnet18GAP(pretrained=True, **kwargs):
     """
     model = ResNetGAP(BasicBlock, [2, 2, 2, 2], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']), strict=False)
+        model.load_state_dict(model_zoo.load_url(model_urls["resnet18"]), strict=False)
     return model
